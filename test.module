@@ -8,63 +8,63 @@
  * Implements hook_help().
  */
 function test_help($path, $arg) {
-	switch ($path) {
-		case 'admin/help#test':
-			$output = file_get_contents(drupal_get_path('module', 'test') . '/README.txt');
-			return $output;
-	}
+  switch ($path) {
+    case 'admin/help#test':
+      $output = file_get_contents(drupal_get_path('module', 'test') . '/README.txt');
+      return $output;
+  }
 }
 
 /**
  * Implements hook_menu().
  */
 function test_menu() {
-	$items['page_json/%/%node'] = array(
-		'title' => 'Json Data',
-		'page callback' => 'test_json_data',
-		'page arguments' => array(2),
-		'access arguments' => array(1, 2),
-		'access callback' => '_test_access_check',
-		'file' => 'test.json.inc',
-		'weight' => 0,
-	);
+  $items['page_json/%/%node'] = array(
+    'title' => 'Json Data',
+    'page callback' => 'test_json_data',
+    'page arguments' => array(2),
+    'access arguments' => array(1, 2),
+    'access callback' => '_test_access_check',
+    'file' => 'test.json.inc',
+    'weight' => 0,
+  );
 
-	return $items;
+  return $items;
 }
 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
 function test_form_system_site_information_settings_alter(&$form, &$form_state, $form_id) {
-	// Element siteapikey.
-	$form['siteapikey'] = array(
-		'#type' => 'textfield',
-		'#title' => t('Site API Key'),
-		'#default_value' => variable_get('siteapikey', t('No API Key yet')),
-	);
+  // Element siteapikey.
+  $form['siteapikey'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Site API Key'),
+    '#default_value' => variable_get('siteapikey', t('No API Key yet')),
+  );
 
-	// Change Submit button text.
-	$form['actions']['submit']['#value'] = t('Update Configuration');
+  // Change Submit button text.
+  $form['actions']['submit']['#value'] = t('Update Configuration');
 
-	// Show Message post form submit.
-	if (isset($form_state['input']['siteapikey'])) {
-		drupal_set_message(
-			t('Site API Key has been saved with value : @value',
-				array(
-					'@value' => $form_state['input']['siteapikey']
-				)
-			)
-		);
-	}
+  // Show Message post form submit.
+  if (isset($form_state['input']['siteapikey'])) {
+    drupal_set_message(
+      t('Site API Key has been saved with value : @value',
+        array(
+          '@value' => $form_state['input']['siteapikey']
+        )
+      )
+    );
+  }
 }
 
 /**
  * Access callback.
  */
 function _test_access_check($api, $node) {
-	// Check api and content_type.
-	if ($api === variable_get('siteapikey') && $node->type == 'page') {
-		return TRUE;
-	}
-	return FALSE;
+  // Check api and content_type.
+  if ($api === variable_get('siteapikey') && $node->type == 'page') {
+    return TRUE;
+  }
+  return FALSE;
 }
